@@ -93,10 +93,11 @@ export default {
             faceEmbeddings: null, // Store face embeddings data
             faceRecognitionStatus: false, // Status for face recognition
             errors: {}, // Object to store validation errors
+            bestMatch: null,
             number_person: '', // Store the caretaker number input
             name: '', // Store name input (add this if you want to use it)
             position: '', // Store position input (add this if you want to use it)
-            bestMatch: null
+            
         };
     },
     methods: {
@@ -173,7 +174,8 @@ export default {
                 const max_distance = 1.0;
                 const similarityPercentage = Math.max(0, (1 - lowestDistance / max_distance) * 100).toFixed(2);
 
-                if (this.bestMatch && similarityPercentage >= 65) {
+                if (this.bestMatch && similarityPercentage >= 70) {
+                    // this.showAlertG(`ยินดีต้อนรับ ${this.bestMatch.name}`);
                     this.showAlertG(`ยินดีต้อนรับ ${this.bestMatch.name} (ความเหมือน: ${similarityPercentage}%)`);
                     // alert(`Face matched with ${this.bestMatch.name} (Similarity: ${similarityPercentage}%)`);
                     return true;
@@ -362,6 +364,11 @@ export default {
                     room_number: this.bestMatch.room_number,
                     timeOpen: timestamp
                 });
+                this.faceDetectionAnimationFrame = null; // RequestAnimationFrame ID for face detection
+                this.faceEmbeddings= null // Store face embeddings data
+                this.faceRecognitionStatus = false, // Status for face recognition
+                this.errors = {}; // Object to store validation errors
+                this.bestMatch = null;
 
                 console.log(isMatch)
                 
