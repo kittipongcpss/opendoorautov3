@@ -85,8 +85,12 @@
                 <div v-if="errors.selectedRoom" class="text-red-500">{{ errors.selectedRoom }}</div>
             </div>
             <button :disabled="!faceEmbeddings" @click="submitForm"
-                class="px-4 py-2 text-white bg-green-500 rounded hover:bg-green-600">
+                class="px-4 py-2 mx-3 text-white bg-green-500 rounded hover:bg-green-600">
                 บันทึกผู้ดูแลห้อง
+            </button>
+            <button :disabled="!faceEmbeddings" @click="resetinForm"
+                class="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600">
+                รีเซต
             </button>
             <div v-if="errors.faceEmbeddings" class="mt-4 text-red-500">{{ errors.faceEmbeddings }}</div>
 
@@ -336,6 +340,12 @@ export default {
                 //     this.uploadToFirestore(this.faceEmbeddings);
                 // }
             }
+        },
+        resetinForm() { 
+            this.number_person = '';
+            this.name = '';
+            this.position = '';
+            this.selectedRoom = '';
         },
         resetForm() {
             this.number_person = '';

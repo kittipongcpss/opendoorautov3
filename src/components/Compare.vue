@@ -173,7 +173,7 @@ export default {
                 const max_distance = 1.0;
                 const similarityPercentage = Math.max(0, (1 - lowestDistance / max_distance) * 100).toFixed(2);
 
-                if (this.bestMatch && similarityPercentage >= 70) {
+                if (this.bestMatch && similarityPercentage >= 65) {
                     this.showAlertG(`ยินดีต้อนรับ ${this.bestMatch.name} (ความเหมือน: ${similarityPercentage}%)`);
                     // alert(`Face matched with ${this.bestMatch.name} (Similarity: ${similarityPercentage}%)`);
                     return true;
