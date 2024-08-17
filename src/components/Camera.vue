@@ -174,8 +174,6 @@ export default {
                     this.$refs.video.style.width = "auto";
                     this.$refs.video.style.height = "100%";
                 }
-
-                //this.detectFaces();
             };
 
             // this.$refs.video.onloadedmetadata = () => {
@@ -195,73 +193,6 @@ export default {
                 cancelAnimationFrame(this.faceDetectionAnimationFrame);
                 this.faceDetectionAnimationFrame = null;
             }
-        },
-        async detectFaces() {
-            // Load models
-            await faceapi.nets.ssdMobilenetv1.loadFromUri(
-                '/models2/ssd_mobilenetv1_model-weights_manifest.json'
-            );
-            await faceapi.nets.faceLandmark68Net.loadFromUri(
-                '/models2/face_landmark_68_model-weights_manifest.json'
-            );
-            await faceapi.nets.faceRecognitionNet.loadFromUri(
-                '/models2/face_recognition_model-weights_manifest.json'
-            );
-
-            const canvas = this.$refs.canvas;
-            const video = this.$refs.video;
-
-            const detect = async () => {
-                if (video && canvas) {
-                    const videoWidth = video.videoWidth;
-                    const videoHeight = video.videoHeight;
-
-                    if (videoWidth > 0 && videoHeight > 0) {
-                        // Set canvas size to match video
-                        canvas.width = videoWidth;
-                        canvas.height = videoHeight;
-
-                        const detections = await faceapi
-                            .detectAllFaces(video)
-                            .withFaceLandmarks()
-                            .withFaceDescriptors();
-
-                        faceapi.matchDimensions(canvas, {
-                            width: videoWidth,
-                            height: videoHeight,
-                        });
-                        const resizedDetections = faceapi.resizeResults(detections, {
-                            width: videoWidth,
-                            height: videoHeight,
-                        });
-
-                        const context = canvas.getContext('2d');
-                        context.clearRect(0, 0, canvas.width, canvas.height);
-
-                        // Draw detections with custom styling
-                        faceapi.draw.drawDetections(canvas, resizedDetections, {
-                            withScore: false,
-                        });
-                        faceapi.draw.drawFaceLandmarks(canvas, resizedDetections, {
-                            drawLines: false,
-                            drawDescriptors: false,
-                        });
-
-                        // Drawing custom dots for landmarks with increased size
-                        resizedDetections.forEach(detection => {
-                            detection.landmarks.positions.forEach(point => {
-                                context.beginPath();
-                                context.arc(point.x, point.y, 2, 0, 2 * Math.PI); // Increased size of the circle
-                                context.fillStyle = 'green'; // Green color
-                                context.fill();
-                            });
-                        });
-                    }
-                }
-                this.faceDetectionAnimationFrame = requestAnimationFrame(detect);
-            };
-
-            detect();
         },
         async changeCamera() {
             this.stopCamera();
@@ -288,24 +219,6 @@ export default {
             // ส่งข้อมูลภาพไปประมวลผล
             this.processFaceRecognition(imageData);
 
-            // const video = this.$refs.video; // ดึง video element
-            // const canvas = this.$refs.canvas; // ดึง canvas element
-            // const context = canvas.getContext('2d'); // ดึง context ของ canvas
-
-            // // กำหนดขนาดของ canvas ให้ตรงกับขนาดของ video
-            // canvas.width = video.videoWidth;
-            // canvas.height = video.videoHeight;
-
-            // // วาดภาพจาก video ลงใน canvas
-            // context.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-            // // ดึงข้อมูลภาพจาก canvas
-            // const imageData = canvas.toDataURL('image/jpeg');
-
-            // // 
-
-            // // ส่งข้อมูลภาพไปประมวลผล
-            // this.processFaceRecognition(imageData);
         },
         async processFaceRecognition(imageData) {
             // Load models and check if they are loaded correctly
